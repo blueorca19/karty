@@ -41,6 +41,7 @@ public class Deck implements Iterable<Card> {
     //метод проверки пуста ли колода
     public boolean isEmpty(){
         return false;
+
     }
 
     //метод для перемешивания колоды

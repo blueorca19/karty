@@ -18,10 +18,10 @@ public class GameProcess {
     public GameProcess() {
         this.scanner = new Scanner(System.in);
         this.deck = new Deck();
-        if (deck.isEmpty()) {
+       if (deck.isEmpty()) {
             System.out.println("Карты в колоде закончились. Игра завершена.");
             System.exit(0);
-        }
+       }
         this.player = new Player(getPlayerName());
         this.cardIterator = deck.iterator();
     }
@@ -31,36 +31,36 @@ public class GameProcess {
         return scanner.nextLine();
     }
 
-    public void startGame() {
+    public void startGame() { // Метод для начала игры
         boolean gameInProgress = true;
 
-        while (gameInProgress) {
-            Iterator<Card> cardIterator = deck.iterator();
-            player.resetRound();
+//        while (gameInProgress) {
+            Iterator<Card> cardIterator = deck.iterator(); // Итератор по колоде карт
 
-            while (cardIterator.hasNext() && player.getScore() < 21) {
-                Card card = cardIterator.next();
-                player.drawCard(card);
-                System.out.println("Вы получили карту: " + card);
-
-                if (player.getScore() >= 21) {
-                    handleRoundEnd();
-                    if (!startNewRound()) {
-                        gameInProgress = false;
-                        break;
-                    }
-                } else if (!drawAdditionalCard()) {
+            while (cardIterator.hasNext()) {
+                System.out.println("Хотите начать новый раунд?");
+                String inPut= scanner.nextLine();
+                if (inPut.equals("e")){
                     break;
                 }
-            }
 
-            if (!cardIterator.hasNext() || !startNewRound()) {
-                gameInProgress = false;
+                if (player.getScore() >= 21) {
+                    handleRoundEnd(); // Обработка завершения раунда
+                } else if (drawAdditionalCard()) { // Если игрок не хочет брать дополнительные карты, выходим из цикла
+                    Card card = cardIterator.next(); // Получение следующей карты
+                    player.drawCard(card);// Добавление карты игрок
+                    System.out.println("Вы получили карту: " + card); // Вывод информации о полученной карте
+
+                }
             }
-        }
+//        }
+
+        System.out.println("Игра завершена. Общий счет игрока: " + player.getTotalScore());
+
 
         scanner.close();
     }
+    // Метод для обработки завершения раунда
 
     private void handleRoundEnd() {
         if (player.getScore() == 21) {
@@ -71,7 +71,7 @@ public class GameProcess {
         }
         player.resetRound();
     }
-
+    // Метод для запроса игрока о том, брать ли ему дополнительные карты
     private boolean drawAdditionalCard() {
         String drawChoice;
         do {
@@ -81,7 +81,7 @@ public class GameProcess {
 
         return drawChoice.equals("y");
     }
-
+    // Метод для запроса игрока о том, начать ли новый раунд или завершить игру
     private boolean startNewRound() {
         if (deck.isEmpty()) {
             System.out.println("Карты в колоде закончились. Игра завершена.");
@@ -98,10 +98,9 @@ public class GameProcess {
                 System.out.println("Карты в колоде закончились. Игра завершена.");
                 return false;
             }
-        } else {
-            System.out.println("Игра завершена. Общий счет игрока: " + player.getTotalScore());
-            return false;
         }
+
+
 
         return true;
     }
